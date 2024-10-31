@@ -111,9 +111,9 @@ def is_neighbor():
 def get_reachable_positions():
     global reachable_positions
     reachable_positions = set()
-    red_row, red_col = get_circle_grid_position(piece_red if player == "red" else piece_blue)
-    blue_row, blue_col = get_circle_grid_position(piece_blue if player == "red" else piece_red)
-    if is_neighbor():
+    red_row, red_col = get_circle_grid_position(piece_red)
+    blue_row, blue_col = get_circle_grid_position(piece_blue)
+    if is_neighbor() or player == "red":
         for i in range(4):
             if red_row + dir[i][0] == blue_row and red_col + dir[i][1] == blue_col:
                 continue
@@ -121,6 +121,7 @@ def get_reachable_positions():
                 continue
             if 0 <= red_row + dir[i][0] < BOARD_SIZE and 0 <= red_col + dir[i][1] < BOARD_SIZE:
                 reachable_positions.add((red_row + dir[i][0], red_col + dir[i][1]))
+    if is_neighbor() or player == "blue":
         for i in range(4):
             if walls[(blue_row, blue_col)][i]:
                 continue
@@ -128,12 +129,6 @@ def get_reachable_positions():
                 continue
             if 0 <= blue_row + dir[i][0] < BOARD_SIZE and 0 <= blue_col + dir[i][1] < BOARD_SIZE:
                 reachable_positions.add((blue_row + dir[i][0], blue_col + dir[i][1]))
-    else:
-        for i in range(4):
-            if walls[(red_row, red_col)][i]:
-                continue
-            if 0 <= red_row + dir[i][0] < BOARD_SIZE and 0 <= red_col + dir[i][1] < BOARD_SIZE:
-                reachable_positions.add((red_row + dir[i][0], red_col + dir[i][1]))
     for position in reachable_positions:
         if player == "red":
             draw_circle(position[0], position[1], "salmon", "preview_piece")
@@ -368,7 +363,7 @@ def handle_event(event):
 canvas.bind("<Button-1>", handle_event)
 canvas.bind("<Motion>", show_wall_preview)
 
-button_restart = tk.Button(main_frame, text="重新开始", command=lambda: init_main_frame())
+button_restart = tk.Button(main_frame, text="重新开始", command=lambda: reset())
 button_restart.pack()
 
 def reset():
