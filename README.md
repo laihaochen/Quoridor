@@ -1,0 +1,1 @@
+reference: [quoridor.py-master](https://github.com/alainrinder/quoridor.py)
